@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Homepage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #007bff;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 60px;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .social-links a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #0056b3;
+        }
+
+        section {
+            background-color: #fff;
+            padding: 30px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .about-content {
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .paper-list {
+            list-style: none;
+        }
+
+        .paper-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .paper-item:last-child {
+            border-bottom: none;
+        }
+
+        .paper-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .paper-authors {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 3px;
+        }
+
+        .paper-venue {
+            color: #3498db;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .paper-links {
+            margin-top: 5px;
+        }
+
+        .paper-links a,
+        .paper-links button {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 0.9em;
+            margin-right: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        .paper-links a:hover,
+        .paper-links button:hover {
+            text-decoration: underline;
+        }
+
+        /* BibTeX Modal Styles */
+        .bibtex-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .bibtex-modal.show {
+            opacity: 1;
+        }
+
+        .bibtex-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+        }
+
+        .bibtex-modal.show .bibtex-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .close-btn:hover {
+            color: #000;
+        }
+
+        .bibtex-text {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+
+        .copy-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .copy-btn.copied {
+            background-color: #28a745;
+        }
+
+        .loading {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 20px;
+        }
+
+        .error {
+            color: #e74c3c;
+            padding: 10px;
+            background-color: #ffe6e6;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .blog-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .blog-card {
+            padding: 20px;
+            border: 1px solid #ecf0f1;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s;
+        }
+
+        .blog-card:hover {
+            border-color: #3498db;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .blog-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .blog-card p {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .education-item,
+        .work-item {
+            margin-bottom: 20px;
+        }
+
+        .education-item h3,
+        .work-item h3 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .education-item .institution,
+        .work-item .institution {
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .education-item .duration,
+        .work-item .duration {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .work-item ul {
+            list-style-position: outside;
+            padding-left: 20px;
+            color: #555;
+        }
+
+        .work-item li {
+            margin-bottom: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            section {
+                padding: 20px;
+            }
+
+            .social-links {
+                flex-wrap: wrap;
+            }
+
+            .paper-links a,
+            .paper-links button {
+                display: inline-block;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="avatar">JC</div>
+            <h1>Jingwei Chen</h1>
+            <p class="subtitle">Independant Researcher</p>
+            <p class="subtitle">Research Interests: AI, including Conbinatorial Search, NLP, Agents, Embodied AI </p>
+            <div class="social-links">
+                <a id="email-link">📧 Email</a>
+                <a href="https://github.com/Voleco" target="_blank">💻 GitHub</a>
+                <a href="https://www.linkedin.com/in/jingwei-chen-726bb785/" target="_blank">💼 LinkedIn</a>
+            </div>
+        </header>
+
+        <section id="about">
+            <h2>About Me</h2>
+            <div class="about-content">
+                <p> I'm a passionate AI researcher and engineer with a deep interest in advancing intelligent systems.
+                </p>
+
+                <p>During my PhD, I specialized in heuristic search algorithms, exploring efficient methods for solving
+                    complex optimization problems in AI planning and decision-making.
+                </p>
+
+                <p>At PuduRobotics, I led the development of the company's second-generation Multi-Agent Path Finding
+                    (MAPF) project, optimizing navigation and coordination for multi-robot systems in real-world
+                    environments. Additionally, I spearheaded a groundbreaking initiative to build an intelligent voice
+                    agent from scratch, leveraging Large Language Models (LLMs) to enable natural, context-aware
+                    interactions.</p>
+
+                <p>These experiences have fueled my growing expertise and enthusiasm in Natural Language Processing
+                    (NLP),
+                    LLMs, robotics, and embodied AI—fields where I continue to innovate and contribute.
+                </p>
+
+                <p> I'm always excited to collaborate on cutting-edge AI projects. Feel free to reach out!
+                </p>
+            </div>
+        </section>
+
+
+        <section id="education">
+            <h2>Education</h2>
+            <div class="education-item">
+                <h3>Ph.D. in Computing Science</h3>
+                <p class="institution">University of Alberta</p>
+                <p class="duration">2015 - 2022 | Advisor: Prof. Nathan Sturtevant</p>
+                <p class="desc">Ph.D. studies initiated at the University of Denver (2015-2018) and transferred to the
+                    University of Alberta to continue research with my advisor.</p>
+            </div>
+            <div class="education-item">
+                <h3>M.S. in Computer Science</h3>
+                <p class="institution">University of Denver</p>
+                <p class="duration">2013 - 2015</p>
+            </div>
+            <div class="education-item">
+                <h3>B.S. in Computer Science</h3>
+                <p class="institution">Shanghai Jiao Tong University</p>
+                <p class="duration">2009 - 2013 </p>
+            </div>
+        </section>
+
+        <section id="experience">
+            <h2>Work Experience</h2>
+            <div class="work-item">
+                <h3> MAPF Engineer </h3>
+                <p class="institution">PuduRobotics</p>
+                <p class="duration">May 2022 - Sep 2025</p>
+                <ul>
+                    <li>Led the design and implementation of the company's <strong>second-generation Multi-Agent Path
+                            Finding (MAPF) system</strong>.</li>
+                    <li>Built the company's <strong>LLM-based, multi-scenario intelligent voice agent</strong> from
+                        scratch.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="publications">
+            <h2>Publications</h2>
+            <ul class="paper-list">
+                <li class="paper-item" data-bibtex="@inproceedings{gao2022memory,
+  title={A Memory-Bounded Best-First Beam Search and Its Application to Scheduling Halide Programs},
+  author={Gao, Chao and Chen, Jingwei and Mo, Tong and Sajed, Tanvir and Jui, Shangling and Qin, Min and Gong, Laiyuan and Lu, Wei},
+  booktitle={Proceedings of the International Symposium on Combinatorial Search},
+  volume={15},
+  number={1},
+  pages={74--82},
+  year={2022}
+}">
+                    <div class="paper-title">A Memory-Bounded Best-First Beam Search and Its Application to Scheduling
+                        Halide Programs</div>
+                    <div class="paper-authors">Chao Gao, Jingwei Chen, Tianjun Mo, Tarek Sajed, Shaun Jui, Mingyuan Qin,
+                        ..., Wei Lu</div>
+                    <div class="paper-venue">Proceedings of the International Symposium on Combinatorial Search (SoCS),
+                        15(1), 74-82, July 2022</div>
+                    <div class="paper-links">
+                        <a href="./papers/2022_SoCS_memory_bounded_beam_search.pdf" target="_blank">[PDF]</a>
+                        <button class="bibtex-btn">[BibTeX]</button>
+                    </div>
+                </li>
+                <li class="paper-item" data-bibtex="@article{chen2021conditions,
+  title={Necessary and Sufficient Conditions for Avoiding Reopenings in Best First Suboptimal Search with General Bounding Functions},
+  author={Jingwei Chen and Nathan R. Sturtevant},
+  journal={AAAI Conference on Artificial Intelligence},
+  year={2021},
+}">
+                    <div class="paper-title">Necessary and Sufficient Conditions for Avoiding Reopenings in Best First
+                        Suboptimal Search with General Bounding Functions</div>
+                    <div class="paper-authors">Jingwei Chen, Nathan R. Sturtevant</div>
+                    <div class="paper-venue">Proceedings of the AAAI Conference on Artificial Intelligence, 35(5),
+                        3688-3696, May 2021</div>
+                    <div class="paper-links">
+                        <a href="./papers/2021_AAAI_avoiding_reopenings.pdf" target="_blank">[PDF]</a>
+                        <button class="bibtex-btn">[BibTeX]</button>
+                    </div>
+                </li>
+                <li class="paper-item" data-bibtex="@article{chen2019conditions,
+  title={Conditions for Avoiding Node Re-expansions in Bounded Suboptimal Search},
+  author={Jingwei Chen and Nathan R. Sturtevant},
+  journal={International Joint Conference on Artificial Intelligence (IJCAI)},
+  year={2019},
+ }">
+                    <div class="paper-title">Conditions for Avoiding Node Re-expansions in Bounded Suboptimal Search
+                    </div>
+                    <div class="paper-authors">Jingwei Chen, Nathan R. Sturtevant</div>
+                    <div class="paper-venue">Proceedings of the 28th International Joint Conference on Artificial
+                        Intelligence (IJCAI), 1220-1226, August 2019</div>
+                    <div class="paper-links">
+                        <a href="./papers/2019_IJCAI_node_reexpansions.pdf" target="_blank">[PDF]</a>
+                        <button class="bibtex-btn">[BibTeX]</button>
+                    </div>
+                </li>
+                <li class="paper-item" data-bibtex="@article{chen2019revisiting,
+  title={Revisiting Suboptimal Search},
+  author={Jingwei Chen and Nathan R. Sturtevant and William Doyle and Wheeler Ruml},
+  journal={Symposium on Combinatorial Search (SoCS)},
+  year={2019},
+  pages = {18--25},
+}
+">
+                    <div class="paper-title">Revisiting Suboptimal Search</div>
+                    <div class="paper-authors">Jingwei Chen, Nathan Sturtevant, William Doyle, Wheeler Ruml</div>
+                    <div class="paper-venue">Proceedings of the International Symposium on Combinatorial Search (SoCS),
+                        10(1), 18-25, 2019</div>
+                    <div class="paper-links">
+                        <a href="./papers/2019_SoCS_revisiting_suboptimal_search.pdf" target="_blank">[PDF]</a>
+                        <button class="bibtex-btn">[BibTeX]</button>
+                    </div>
+                </li>
+
+                <li class="paper-item" data-bibtex="@inproceedings{holte2017mmjur,
+  author    = {Robert C. Holte and Ariel Felner and Guni Sharon and Nathan R. Sturtevant and Jingwei Chen},
+  title     = {MM: A Bidirectional Search That Is Guaranteed to Meet in the Middle},
+  booktitle = {Artificial Intelligence (AIJ)},
+  year      = {2017},
+  volume    = {252},
+  pages     = {232--266},
+}">
+                    <div class="paper-title">MM: A Bidirectional Search That Is Guaranteed to Meet in the Middle</div>
+                    <div class="paper-authors">Robert C. Holte, Ariel Felner, Guni Sharon, Nathan R. Sturtevant and
+                        Jingwei Chen</div>
+                    <div class="paper-venue">Artificial Intelligence (AIJ),
+                        252, 232-266, 2017</div>
+                    <div class="paper-links">
+                        <a href="./papers/2017_AIJ_MM.pdf" target="_blank">[PDF]</a>
+                        <button class="bibtex-btn">[BibTeX]</button>
+                    </div>
+                </li>
+
+                <li class="paper-item" data-bibtex="@inproceedings{chen2017front,
+  title={Front-to-End Bidirectional Heuristic Search with Near-Optimal Node Expansions},
+  author={Chen, Jingwei and Holte, Robert C. and Zilles, Sandra and Sturtevant, Nathan R.},
+  booktitle={Proceedings of the 26th International Joint Conference on Artificial Intelligence},
+  pages={489--495},
+  year={2017}
+}">
+                    <div class="paper-title">Front-to-End Bidirectional Heuristic Search with Near-Optimal Node
+                        Expansions</div>
+                    <div class="paper-authors">Jingwei Chen, Robert C. Holte, Sandra Zilles, Nathan R. Sturtevant</div>
+                    <div class="paper-venue">Proceedings of the 26th International Joint Conference on Artificial
+                        Intelligence (IJCAI), 489-495, August 2017</div>
+                    <div class="paper-links">
+                        <a href="./papers/2017_IJCAI_front_to_end_bidirectional.pdf" target="_blank">[PDF]</a>
+                        <button class="bibtex-btn">[BibTeX]</button>
+                    </div>
+                </li>
+                <li class="paper-item" data-bibtex='@inproceedings{eckerle2017sufficient,
+  title={Sufficient conditions for node expansion in bidirectional heuristic search},
+  author={Eckerle, J{\"u}rgen and Chen, Jingwei and Sturtevant, Nathan and Zilles, Sandra and Holte, Robert},
+  booktitle={Proceedings of the International Conference on Automated Planning and Scheduling},
+  volume={27},
+  pages={79--87},
+  year={2017}
+}'>
+                    <div class="paper-title">Sufficient Conditions for Node Expansion in Bidirectional Heuristic Search
+                    </div>
+                    <div class="paper-authors">Jens Eckerle, Jingwei Chen, Nathan Sturtevant, Sandra Zilles, Robert
+                        Holte</div>
+                    <div class="paper-venue">Proceedings of the International Conference on Automated Planning and
+                        Scheduling (ICAPS), 27, 79-87, June 2017</div>
+                    <div class="paper-links">
+                        <a href="./papers/2017_ICAPS_sufficient_conditions.pdf" target="_blank">[PDF]</a>
+                        <button class="bibtex-btn">[BibTeX]</button>
+                    </div>
+                </li>
+                <li class="paper-item" data-bibtex="@article{shaham2017min,
+  title={The Minimal Set of States that Must be Expanded in a Front-to-end Bidirectional Search},
+  author={Eshed Shaham and Ariel Felner and Jingwei Chen and Nathan R. Sturtevant},
+  journal={Symposium on Combinatorial Search (SoCS)},
+  year={2017},
+}">
+                    <div class="paper-title">The Minimal Set of States That Must Be Expanded in a Front-to-End
+                        Bidirectional Search</div>
+                    <div class="paper-authors">Eshed Shaham, Ariel Felner, Jingwei Chen, Nathan Sturtevant</div>
+                    <div class="paper-venue">Proceedings of the International Symposium on Combinatorial Search (SoCS),
+                        8(1), 82-90, 2017</div>
+                    <div class="paper-links">
+                        <a href="./papers/2017_SoCS_minimal_set_states.pdf" target="_blank">[PDF]</a>
+                        <button class="bibtex-btn">[BibTeX]</button>
+                    </div>
+                </li>
+
+                <li class="paper-item" data-bibtex="@article{sturtevant2016pemm,
+  title={External Memory Bidirectional Search},
+  author={Nathan Sturtevant and Jingwei Chen},
+  journal={International Joint Conference on Artificial Intelligence (IJCAI)},
+  year={2016},
+  pages = {676--682},
+}">
+                    <div class="paper-title">External Memory Bidirectional Search</div>
+                    <div class="paper-authors">Nathan R. Sturtevant, Jingwei Chen</div>
+                    <div class="paper-venue">International Joint Conference on Artificial Intelligence (IJCAI), 2016
+                    </div>
+                    <div class="paper-links">
+                        <a href="./papers/2016_IJCAI_PEMM.pdf" target="_blank">[PDF]</a>
+                        <button class="bibtex-btn">[BibTeX]</button>
+                    </div>
+                </li>
+            </ul>
+        </section>
+
+
+        <section id="blog">
+            <h2>Blog & Resources</h2>
+            <div class="blog-links">
+                <a href="https://medium.com/@Voleco/why-faster-ai-code-isnt-faster-software-and-how-to-fix-it-7-thriving-in-the-new-normal-of-4cdf152bbefc?source=friends_link&sk=026d34a5c444f70dccf2c90db786b66e"
+                    class="blog-card">
+                    <h3>Why Faster AI Code Isn’t Faster Software (and How to Fix It)</h3>
+                    <p>Discover the new normal in AI-augmented software engineering: Master blueprints, DREM metrics,
+                        and human-AI synergy to slash bugs and build faster systems.</p>
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; <span id="copyright-year"></span> Jingwei Chen. All rights reserved.</p>
+        </footer>
+    </div>
+
+
+
+    <!-- BibTeX Modal -->
+    <div id="bibtexModal" class="bibtex-modal">
+        <div class="bibtex-content">
+            <span class="close-btn" onclick="closeBibtex()">&times;</span>
+            <h3>BibTeX Citation</h3>
+            <div class="bibtex-text" id="bibtexText"></div>
+            <button class="copy-btn" onclick="copyBibtex()">Copy to Clipboard</button>
+        </div>
+    </div>
+
+
+
+    <script>
+        // Store the current BibTeX content
+        let currentBibtex = '';
+
+        // Add click handlers to all BibTeX buttons
+        document.querySelectorAll('.bibtex-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const paperItem = this.closest('.paper-item');
+                const bibtexData = paperItem.getAttribute('data-bibtex');
+                showBibtex(bibtexData);
+            });
+        });
+
+        function showBibtex(bibtexContent) {
+            const modal = document.getElementById('bibtexModal');
+            const bibtexText = document.getElementById('bibtexText');
+
+            currentBibtex = bibtexContent;
+            bibtexText.textContent = bibtexContent;
+
+            modal.style.display = 'block';
+            setTimeout(() => modal.classList.add('show'), 10);
+        }
+
+        function closeBibtex() {
+            const modal = document.getElementById('bibtexModal');
+            modal.classList.remove('show');
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        function copyBibtex() {
+            navigator.clipboard.writeText(currentBibtex).then(() => {
+                const copyBtn = document.querySelector('.copy-btn');
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy to Clipboard';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = currentBibtex;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                const copyBtn = document.querySelector('.copy-btn');
+                copyBtn.textContent = 'Copied!';
+                copyBtn.classList.add('copied');
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy to Clipboard';
+                    copyBtn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            if (event.target.id === 'bibtexModal') {
+                closeBibtex();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && document.getElementById('bibtexModal').classList.contains('show')) {
+                closeBibtex();
+            }
+        });
+
+
+
+        // --- Enhanced Email Copy Logic ---
+        const emailLink = document.getElementById('email-link');
+        const originalEmailHTML = emailLink.innerHTML;
+        const emailAddress = 'chenjingwei1991@gmail.com';
+        let copyTimeoutId = null;
+
+        function revertEmailLink() {
+            if (emailLink.innerHTML !== originalEmailHTML) {
+                emailLink.innerHTML = originalEmailHTML;
+            }
+            if (copyTimeoutId) {
+                clearTimeout(copyTimeoutId);
+                copyTimeoutId = null;
+            }
+        }
+
+        emailLink.addEventListener('click', function (event) {
+            event.stopPropagation(); // Prevent the document click listener from firing
+            revertEmailLink(); // Reset if already in "Copied" state from a previous click
+
+            navigator.clipboard.writeText(emailAddress).then(() => {
+                emailLink.innerHTML = '✅ Copied!';
+                // Set a timer to revert the text back, in ms.
+                copyTimeoutId = setTimeout(revertEmailLink, 5000);
+            }).catch(err => {
+                console.error('Failed to copy email:', err);
+                alert('Failed to copy email. Please copy it manually: ' + emailAddress);
+            });
+        });
+
+        // Add a listener to the whole document to revert the text when clicking anywhere else
+        document.addEventListener('click', revertEmailLink);
+
+        // --- Dynamic Copyright Year ---
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+    </script>
+
+</body>
+
+</html>
